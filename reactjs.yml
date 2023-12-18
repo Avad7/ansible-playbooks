@@ -1,0 +1,31 @@
+---
+- name: Install Node.js, VS Code, and Git
+  hosts: webserver
+  become: true
+  tasks:
+    - name: Update apt package cache
+      apt:
+        update_cache: no
+
+    - name: Install Node.js
+      apt_repository:
+        repo: 'deb https://deb.nodesource.com/node_14.x focal main'
+        state: present
+      when: ansible_distribution_version == '20.04'
+
+    - name: Install VS Code
+      apt_repository:
+        repo: deb [arch=amd64] http://packages.microsoft.com/repos/vscode stable main
+        state: present
+        update_cache: no
+
+    - name: Install Git
+      apt:
+        name: git
+        state: present
+
+  handlers:
+    - name: Install VS Code
+      apt:
+        name: code
+        state: present

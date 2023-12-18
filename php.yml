@@ -1,0 +1,35 @@
+---
+- name: Install Development Tools on Ubuntu
+  hosts: webserver
+  become: yes
+  tasks:
+    - name: Install Apache
+      apt:
+        name: apache2
+        state: present
+
+    - name: Install Composer
+      apt:
+        name: composer
+        state: present
+
+    - name: Install Node.js 
+      apt:
+        name:
+          - nodejs
+        state: present
+
+    - name: Install Postman
+      ansible.builtin.snap:
+        name: postman
+        classic: yes
+
+    - name: Install VSCode
+      ansible.builtin.snap:
+        name: code
+        classic: yes
+
+    - name: Install Sublime Text
+      ansible.builtin.snap:
+        name: sublime-text
+        classic: yes

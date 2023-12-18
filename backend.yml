@@ -1,0 +1,73 @@
+---
+- name: Install Development Tools
+  hosts: webserver
+  become: yes
+  tasks:
+    - name: Update apt package cache
+      apt:
+        update_cache: no
+
+    - name: Install Node.js
+      apt:
+        name: nodejs
+        state: present
+
+    - name: Install Redis
+      apt:
+        name: redis-server
+        state: present
+
+    - name: Add VSCode repository
+      apt_repository:
+        repo: "deb [arch=amd64] http://packages.microsoft.com/repos/vscode stable main"
+        state: present
+        update_cache: no
+    
+    - name: "Import MongoDB public key"
+      apt_key:
+         url: "https://www.mongodb.org/static/pgp/server-5.0.asc"
+         state: present
+
+    - name: "Add MongoDB repository"
+      apt_repository:
+         filename: '/etc/apt/sources.list.d/mongodb-org-5.0.list'
+         repo: "deb [ arch=amd64,arm64 ] https://repo.mongodb.org/apt/ubuntu focal/mongodb-org/5.0 multiverse"
+         state: present
+         update_cache: no
+
+    - name: "Install MongoDB"
+      apt:
+         name: mongodb-org
+         state: absent
+         update_cache: no
+                                     
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+    - name: Restart Redis Service
+      service:
+        name: redis-server
+        state: restarted

@@ -1,0 +1,51 @@
+---
+- name: Install Development Tools on Ubuntu 20.04
+  hosts: webserver
+  become: yes
+  tasks:
+    - name: Install OpenJDK 11
+      apt:
+        name: openjdk-11-jdk
+        state: absent
+
+    - name: Install Unzip
+      apt:
+        name: unzip
+        state: present
+
+    - name: Install Git
+      apt:
+        name: git
+        state: present
+
+    - name: Install Notepad++
+      apt:
+        name: notepadqq
+        state: absent
+
+    - name: Download Android Studio
+      get_url:
+        url: "https://redirector.gvt1.com/edgedl/android/studio/ide-zips/2020.3.1.22/android-studio-2020.3.1.22-linux.tar.gz"
+        dest: "/tmp/android-studio.tar.gz"
+
+    - name: Extract Android Studio
+      ansible.builtin.unarchive:
+        src: "/tmp/android-studio.tar.gz"
+        dest: "/opt/"
+        remote_src: true
+        creates: "/opt/android-studio"
+
+    - name: Set Android Studio home
+      ansible.builtin.lineinfile:
+        path: "~/.bashrc"
+        line: "export ANDROID_HOME=/opt/android-studio"
+         
+    - name: Add Android studio to Path
+      ansible.builtin.lineinfile:
+        path: "~/.bashrc"
+        line: "export PATH=$PATH:$ANDROID_STUDIO_HOME/bin"
+
+    - name: Source the updated bashrc
+      shell: "source ~/.bashrc"
+      args:
+        executable: /bin/bash

@@ -1,0 +1,50 @@
+---
+- name: Install Node.js and MongoDB on Ubuntu
+  hosts: webserver
+  become: yes
+  gather_facts: false
+
+  tasks:
+    - name: Install Node.js 14.x
+      apt_repository:
+        repo: 'deb https://deb.nodesource.com/node_14.x focal main'
+        state: present
+    
+    - name: "Import MongoDB public key"
+      apt_key:
+         url: "https://www.mongodb.org/static/pgp/server-5.0.asc"
+         state: present
+
+    - name: "Add MongoDB repository"
+      apt_repository:
+         filename: '/etc/apt/sources.list.d/mongodb-org-5.0.list'
+         repo: "deb [ arch=amd64,arm64 ] https://repo.mongodb.org/apt/ubuntu focal/mongodb-org/5.0 multiverse"
+         state: present
+         update_cache: no
+
+    - name: "Install MongoDB"
+      apt:
+         name: mongodb-org
+         state: absent
+         update_cache: no
+
+    - name: Install dependencies
+      apt:
+        name:
+          - build-essential
+          - libssl-dev
+
+    - name: Install VSCode
+      ansible.builtin.snap:
+        name: code
+        classic: yes
+
+    - name: Install Sublime Text
+      snap:
+        name: sublime-text
+        classic: yes
+      
+    - name: Install Redis
+      apt:
+        name: redis-server
+        state: present     

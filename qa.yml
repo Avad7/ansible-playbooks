@@ -1,0 +1,63 @@
+---
+- name: Install Development Tools
+  hosts: webserver
+  become: yes
+  tasks:
+
+    - name: Add microsoft repository for vs code
+      apt_repository:
+        repo: "deb [arch=amd64] https://packages.microsoft.com/repos/vscode stable main" 
+        state: present
+        update_cache: no
+        
+
+    - name: Update apt package cache
+      apt:
+        update_cache: no
+
+    - name: Install Git
+      apt:
+        name: git
+        state: present
+
+    - name: Add Microsoft GPG key
+      apt_key:
+        url: https://packages.microsoft.com/keys/microsoft.asc
+        state: present
+
+    - name: Add VS Code repository
+      apt_repository:
+        repo: "deb [arch=amd64] https://packages.microsoft.com/repos/vscode stable main"
+        state: present
+
+    - name: Install Visual Studio Code
+      apt:
+        name: code
+        state: absent
+
+    - name: Install Node.js 
+      apt:
+        name:
+          - nodejs
+        state: present
+
+    - name: Install Postman
+      ansible.builtin.snap:
+        name: postman
+        classic: yes
+
+    - name: install fix broken
+      command: apt --fix-broken install -y
+
+    - name: Install JMeter
+      apt:
+        name: openjdk-11-jre-headless
+        state: present
+
+    - name: Install Eclipse
+      apt:
+        name: eclipse
+        state: absent  
+
+   
+
